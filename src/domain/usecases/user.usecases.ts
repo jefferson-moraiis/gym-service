@@ -11,24 +11,20 @@ export class UserUseCase {
     return this.userRepository.createUser(userData);
   }
 
-   // async getUserById(id: number): Promise<User | null> {
-  //   return this.userRepository.findUserById(id);
-  // }
+  async findAllUsers(): Promise<UserDTO[]> {
+    return this.userRepository.findAllUsers();
+  }
 
-  // async getAllUsers(): Promise<User[]> {
-  //   return this.userRepository.findAllUsers();
-  // }
+  async findUserById(id: string): Promise<UserDTO | null> {
+    return this.userRepository.findUserById(id);
+  };
 
-  // async getUserById(id: number): Promise<User | null> {
-  //   return this.userRepository.findUserById(id);
-  // }
+  async updateUser(id: string, userData: Partial<UserDTO>): Promise<UserDTO | null> {
+    return this.userRepository.updateUser(id, userData);
+  }
 
-
-  // async updateUser(id: number, userData: Partial<User>): Promise<User | null> {
-  //   return this.userRepository.updateUser(id, userData);
-  // }
-
-  // async deleteUser(id: number): Promise<boolean> {
-  //   return this.userRepository.deleteUser(id);
-  // }
+  async deleteUser(id: string): Promise<boolean> {
+    return this.userRepository.deleteUser(id);
+  }
+  
 }

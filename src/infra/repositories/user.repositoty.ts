@@ -2,40 +2,45 @@
 import { UserDTO } from '../../domain/dto';
 import { IUserRepository } from '../../domain/interfaces/user.interface';
 import  FirestoreDatabase from '../database/firestore'
+import  FirebaseAuthService from '../database/firebase-auth'
 
 
 export class UserRepository implements IUserRepository {
 
   private userModel: FirestoreDatabase<UserDTO>;
+  private firebaseAuthService: FirebaseAuthService;
   
   constructor() {
-    this.userModel = new FirestoreDatabase('user');
+    this.userModel = new FirestoreDatabase('USER');
+    this.firebaseAuthService = new FirebaseAuthService();
   }
 
-  async createUser(userData: Partial<UserDTO>): Promise <any> {
+  async createUser(userData: Partial<UserDTO>): Promise<any> {
+    const uid = await this.firebaseAuthService.createUserAuth(userData);
+    userData.uid = uid;
+    delete userData.password;
     return this.userModel.create(userData);
   }
 
-  // async updateUser(id: number, userData: Partial<User>): Promise<User | null> {
-  //   const user = await this.findOne(id);
-  //   if (!user) return null;
+  async findAllUsers():Promise<UserDTO[]> {
+    const users = await this.userModel.findAll();
+    return users;
+  }
 
-  //   Object.assign(user, userData);
-  //   await this.save(user);
-  //   return user;
-  // }
+  async findUserById(id: string): Promise<UserDTO | null> {
+    const user = await this.userModel.findById(id);
+    return user;
+  }
 
-  // async deleteUser(id: number): Promise<boolean> {
-  //   const deleteResult = await this.delete(id);
-  //   return deleteResult.affected > 0;
-  // }
+  async updateUser(id: string, userData: Partial<UserDTO>): Promise<UserDTO | null> {
+    const updatedUser = await this.userModel.update(id, userData);
+    return updatedUser;
+  }
 
-  // async findUserById(id: number): Promise<User | null> {
-  //   return this.findOne(id);
-  // }
+  async deleteUser(id: string): Promise<boolean> {
+    await this.userModel.delete(id);
+    return true;
+  }
 
-  // async findAllUsers(): Promise<User[]> {
-  //   return this.find();
-  // }
 }
 
