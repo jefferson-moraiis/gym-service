@@ -19,12 +19,16 @@ export default class FirestoreModel<T> {
   }
 
   async create(data: admin.firestore.WithFieldValue<admin.firestore.DocumentData>) {
-    console.log("🚀 ~ file: firestore.ts:14 ~ FirestoreModel<T> ~ create ~ data:", data)
-    const docRef = await this.collection.add(data).catch((error)=>{
-      console.log(error)
-    });
-    console.log("docRef:", docRef)
-    return docRef
+    const docRef = this.collection.doc();
+    const docId = docRef.id;
+    data.id = docId;
+    await docRef.set(data);
+    const createdDoc = await docRef.get();
+    if (createdDoc.exists) {
+      return createdDoc.data() as T;
+    } else {
+      throw new Error('Failed to fetch created document');
+    }
   }
 
   async findAll(): Promise<T[]> {
@@ -42,8 +46,20 @@ export default class FirestoreModel<T> {
     return doc.data() as T;
   }
 
-  async update(docId: string, data: Partial<T>): Promise<void> {
+  async findWhere(param:string,data:string): Promise<T[]> {
+      const doc = await this.collection.where(`${param}`,'==',`${data}`).get()
+      if (doc.empty) return [];
+      return doc.docs.map((snapshot) => snapshot.data() as T) as T[];
+  }
+
+  async update(docId: string, data: Partial<T>): Promise<T> {
     await this.collection.doc(docId).update(data);
+    const updatedDoc = await this.collection.doc(docId).get();
+    if (updatedDoc.exists) {
+      return updatedDoc.data() as T;
+    } else {
+      throw new Error('Failed to fetch updated document');
+    }
   }
 
   async delete(docId: string): Promise<void> {
