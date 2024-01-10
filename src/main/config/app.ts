@@ -10,7 +10,7 @@ export class App {
     this.server = express();
     this.config()
     this.router()
-    // this.googleConfig()
+    this.googleConfig()
   }
 
   public router() {
@@ -22,11 +22,11 @@ export class App {
     this.server.use(bodyParser.urlencoded({ extended: false }));
   }
 
-  // async googleConfig(){
-  //   await connect().then(()=>{
-  //     console.log("firebase connection established")
-  //   }).catch((error)=>{
-  //     console.log(error)
-  //   })
-  // }
+  async googleConfig(){
+    await connect().then(()=>{
+      console.log("firebase connection established")
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }
 }

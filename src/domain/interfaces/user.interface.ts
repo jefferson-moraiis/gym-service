@@ -1,9 +1,10 @@
-import { UserDTO } from "../dto"
+import { type UserDTO } from "../dto";
+import { type auth } from "firebase-admin";
 
 export interface IUserRepository {
-  createUser: (userData: Partial<UserDTO>) => Promise<UserDTO> 
-  // updateUser: (id: number, userData: Partial<User>) => Promise<User | null>
-  // deleteUser: (id: number) => Promise<boolean> 
-  // findUserById: (id: number) => Promise<User | null> 
-  // findAllUsers: () =>  Promise<User[]> 
+  createUser: (userData: Partial<UserDTO>) => Promise<auth.UserRecord>
+  updateUser: (id: string, userData: Partial<UserDTO>) => Promise<UserDTO | null>
+  deleteUser: (id: string) => Promise<void>
+  findUserById: (id: string) => Promise<UserDTO | null>
+  findAllUsers: () => Promise<UserDTO[] | null>
 }

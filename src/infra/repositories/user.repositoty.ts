@@ -1,41 +1,37 @@
-
-import { UserDTO } from '../../domain/dto';
-import { IUserRepository } from '../../domain/interfaces/user.interface';
-import  FirestoreDatabase from '../database/firestore'
-
+import { type UserDTO } from "@/domain/dto";
+import { type IUserRepository } from "@/domain/interfaces/user.interface";
+import { FirestoreModel } from "@/infra/database";
 
 export class UserRepository implements IUserRepository {
+  private readonly userModel: FirestoreModel<UserDTO>;
 
-  private userModel: FirestoreDatabase<UserDTO>;
-  
   constructor() {
-    this.userModel = new FirestoreDatabase('user');
+    this.userModel = new FirestoreModel<UserDTO>("USERS");
   }
 
-  async createUser(userData: Partial<UserDTO>): Promise <any> {
-    return this.userModel.create(userData);
+  async createUser(userData: Partial<UserDTO>): Promise<any> {
+    return await this.userModel.create(userData);
   }
 
-  // async updateUser(id: number, userData: Partial<User>): Promise<User | null> {
-  //   const user = await this.findOne(id);
-  //   if (!user) return null;
+  async updateUser(
+    id: string,
+    userData: Partial<UserDTO>
+  ): Promise<UserDTO | null> {
+    await auth().updateUser(id, { ...userData });
+    await this.userModel.update(id, { ...userData });
+    return await this.findUserById(id);
+  }
 
-  //   Object.assign(user, userData);
-  //   await this.save(user);
-  //   return user;
-  // }
+  async deleteUser(id: string): Promise<void> {
+    await auth().deleteUser(id);
+    await this.userModel.delete(id);
+  }
 
-  // async deleteUser(id: number): Promise<boolean> {
-  //   const deleteResult = await this.delete(id);
-  //   return deleteResult.affected > 0;
-  // }
+  async findUserById(id: string): Promise<UserDTO | null> {
+    return await this.userModel.findById(id);
+  }
 
-  // async findUserById(id: number): Promise<User | null> {
-  //   return this.findOne(id);
-  // }
-
-  // async findAllUsers(): Promise<User[]> {
-  //   return this.find();
-  // }
+  async findAllUsers(): Promise<UserDTO[]> {
+    return await this.userModel.findAll();
+  }
 }
-
