@@ -1,20 +1,37 @@
-export interface UserDTO {
-  uid: string;
-  id: string;
-  name: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  age: number;
-  role: UserRole;
-  username: string;
-  password: string;
-  lastPassword: string[];
-  emailVerified: boolean;
-  codes: any[];
+export class UserDTO {
+	readonly id: string;
+	readonly name: string;
+	readonly lastName: string;
+	readonly email: string;
+	readonly phone: string;
+	readonly age: number;
+	readonly role: UserRole;
+	readonly username: string;
+	readonly password: string;
+
+	constructor (
+		id: string,
+		name: string,
+		lastName: string,
+		email: string,
+		phone: string,
+		age: number,
+		role: UserRole,
+		username: string,
+		password: string
+	) {
+		this.id = id;
+		this.name = name;
+		this.lastName = lastName;
+		this.email = email;
+		this.phone = phone;
+		this.age = age;
+		this.role = role;
+		this.username = username;
+		this.password = password;
+	}
 }
 enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
+  ADMIN = "admin",
+  USER = "user",
 }
-

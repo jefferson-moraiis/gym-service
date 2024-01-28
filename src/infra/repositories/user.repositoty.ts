@@ -1,46 +1,35 @@
-
-import { UserDTO } from '../../domain/dto';
-import { IUserRepository } from '../../domain/interfaces/user.interface';
-import  FirestoreDatabase from '../database/firestore'
-import  FirebaseAuthService from '../database/firebase-auth'
-
+import { type UserDTO } from "@/domain/dto";
+import { type IUserRepository } from "@/domain/interfaces/user.interface";
+import { FirestoreModel } from "@/infra/database";
 
 export class UserRepository implements IUserRepository {
+  private readonly userModel: FirestoreModel<UserDTO>;
 
-  private userModel: FirestoreDatabase<UserDTO>;
-  private firebaseAuthService: FirebaseAuthService;
-  
   constructor() {
-    this.userModel = new FirestoreDatabase('USER');
-    this.firebaseAuthService = new FirebaseAuthService();
+    this.userModel = new FirestoreModel<UserDTO>("USERS");
   }
 
   async createUser(userData: Partial<UserDTO>): Promise<any> {
-    const uid = await this.firebaseAuthService.createUserAuth(userData);
-    userData.uid = uid;
-    delete userData.password;
-    return this.userModel.create(userData);
+    return await this.userModel.create(userData);
   }
 
-  async findAllUsers():Promise<UserDTO[]> {
-    const users = await this.userModel.findAll();
-    return users;
+  async updateUser(
+    id: string,
+    userData: Partial<UserDTO>
+  ): Promise<UserDTO | null> {
+    await this.userModel.update(id, { ...userData });
+    return await this.findUserById(id);
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.userModel.delete(id);
   }
 
   async findUserById(id: string): Promise<UserDTO | null> {
-    const user = await this.userModel.findById(id);
-    return user;
+    return await this.userModel.findById(id);
   }
 
-  async updateUser(id: string, userData: Partial<UserDTO>): Promise<UserDTO | null> {
-    const updatedUser = await this.userModel.update(id, userData);
-    return updatedUser;
+  async findAllUsers(): Promise<UserDTO[]> {
+    return await this.userModel.findAll();
   }
-
-  async deleteUser(id: string): Promise<boolean> {
-    await this.userModel.delete(id);
-    return true;
-  }
-
 }
-
