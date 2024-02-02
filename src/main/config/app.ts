@@ -1,6 +1,7 @@
 import express from 'express'
 import router from './routes'
 import bodyParser from "body-parser";
+import cors from 'cors';
 import { connect } from './google';
 
 export class App {
@@ -18,6 +19,7 @@ export class App {
   }
 
   private config(): void {
+    this.server.use(cors());
     this.server.use(bodyParser.json());
     this.server.use(bodyParser.urlencoded({ extended: false }));
   }

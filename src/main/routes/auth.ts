@@ -1,7 +1,6 @@
 import { Router } from 'express'
+import { authFactory} from '../factories';
 
 export default (router: Router): void => {
-  router.get("/health-check",(req,res)=> {
-    res.status(200).send({ message: 'Checking health'});
-  })
+  router.post("/login",(req,res)=> authFactory().login(req,res))
 }

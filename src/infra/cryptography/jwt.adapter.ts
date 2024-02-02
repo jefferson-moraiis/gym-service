@@ -1,13 +1,17 @@
 import jwt from 'jsonwebtoken'
 
 export class JwtAdapter{
-  constructor (private readonly secret: string) {}
+  private readonly secret: string
+  constructor () {
+    this.secret = process.env.SECRET_KEY || 'keySecret'
+  }
 
-  async encrypt (plaintext: any) {
+  encrypt (plaintext: any) {
     return jwt.sign(plaintext, this.secret)
   }
 
-  async decrypt (ciphertext: any) {
+  decrypt (ciphertext: any) {
     return jwt.verify(ciphertext, this.secret) as any
   }
+
 }

@@ -39,10 +39,12 @@ export class UserUseCase {
 	}
 
 	async updateUser (id: string, userData: Partial<UserDTO>) {
+		await auth().updateUser(id, { ...userData });
 		return await this.userRepository.updateUser(id, userData);
 	}
 
 	async deleteUser (id: string) {
+    await auth().deleteUser(id);
 		await this.userRepository.deleteUser(id);
 	}
 }

@@ -1,16 +1,16 @@
 import { IExerciseRepository } from '../../domain/interfaces/exercises.interface';
-import  FirestoreDatabase from '../database/firestore'
+import  { FirestoreModel } from '../database/firestore'
 import  FirebaseAuthService from '../database/firebase-auth'
 import { ExerciseDTO } from '../../domain/dto';
 
 
 export class ExerciseRepository implements IExerciseRepository {
 
-  private exerciseModel: FirestoreDatabase<ExerciseDTO>;
+  private exerciseModel: FirestoreModel<ExerciseDTO>;
   private firebaseAuthService: FirebaseAuthService;
   
   constructor() {
-    this.exerciseModel = new FirestoreDatabase('EXERCISES');
+    this.exerciseModel = new FirestoreModel('EXERCISES');
     this.firebaseAuthService = new FirebaseAuthService();
   }
 
@@ -29,7 +29,6 @@ export class ExerciseRepository implements IExerciseRepository {
 
   async updateExercise(id: string, exercise: Partial<ExerciseDTO>): Promise<ExerciseDTO | void> {
     const updatedExercise = await this.exerciseModel.update(id, exercise);
-    console.log(updatedExercise );
     return updatedExercise ;
   }
 

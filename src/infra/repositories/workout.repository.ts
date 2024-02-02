@@ -1,12 +1,12 @@
 import { WorkoutDTO } from "../../domain/dto";
 import { IWorkoutRepository } from "../../domain/interfaces/workout.interface"
-import  FirestoreDatabase from '../database/firestore'
+import { FirestoreModel } from '../database/firestore'
 
 export class WorkoutRepository implements IWorkoutRepository {
-  private workoutModel: FirestoreDatabase<WorkoutDTO>;
+  private workoutModel: FirestoreModel<WorkoutDTO>;
 
   constructor() {
-    this.workoutModel = new FirestoreDatabase('WORKOUT_OUT');
+    this.workoutModel = new FirestoreModel('WORKOUT_OUT');
   }
 
   async createWorkout(workout: Partial<WorkoutDTO>): Promise <any> {

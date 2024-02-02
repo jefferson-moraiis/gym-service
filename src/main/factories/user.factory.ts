@@ -1,5 +1,5 @@
 import { UserController } from "../controllers/user.controller";
-import { UserUseCase } from "@/data/usecases";
+import { UserUseCase } from "../../data/usecases";
 import { UserRepository } from "../../infra/repositories";
 
 export const userFactory = () => {

@@ -1,6 +1,6 @@
-import { type UserDTO } from "@/domain/dto";
-import { type IUserRepository } from "@/domain/interfaces/user.interface";
-import { FirestoreModel } from "@/infra/database";
+import { type UserDTO } from "../../domain/dto";
+import { type IUserRepository } from "../../domain/interfaces/user.interface";
+import { FirestoreModel } from "../database";
 
 export class UserRepository implements IUserRepository {
   private readonly userModel: FirestoreModel<UserDTO>;

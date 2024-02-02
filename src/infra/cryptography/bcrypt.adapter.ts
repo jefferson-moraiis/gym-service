@@ -1,9 +1,12 @@
 import bcrypt from 'bcrypt'
 
 export class BcryptAdapter {
-  constructor (private readonly salt: number) {}
+  private readonly salt: string
+  constructor () { 
+    this.salt = bcrypt.genSaltSync(10)
+  }
 
-  async hash (plaintext: string): Promise<string> {
+  async hash (plaintext: string): Promise<string>{
     return bcrypt.hash(plaintext, this.salt)
   }
 

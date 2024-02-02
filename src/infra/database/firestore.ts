@@ -9,7 +9,7 @@ export class FirestoreModel<T> {
 
 	async create (data: admin.firestore.WithFieldValue<admin.firestore.DocumentData>): Promise<admin.firestore.DocumentSnapshot> {
 		const docRef = this.collection.doc(data.id);
-		await docRef.set({ ...data });
+		await docRef.set({...data});
 		const docSnapshot = await docRef.get();
 		return docSnapshot;
 	}
@@ -25,12 +25,21 @@ export class FirestoreModel<T> {
 
 	async findById (docId: string): Promise<T | null> {
 		try {
-			const doc = await this.collection.doc(docId).get();
+			const doc = await this.collection.doc(docId.trim()).get();
 			return doc.data() as T;
 		} catch (error) {
 			console.error(error);
 			throw error;
 		}
+	}
+
+	async findWhere (field: string, value: string): Promise<T[]> {
+		const querySnapshot = await this.collection.where(field, "==", value).get();
+		const documents: T[] = [];
+		querySnapshot.forEach((doc) => {
+			documents.push(doc.data() as T);
+		});
+		return documents;
 	}
 
 	async update (docId: string, data: Partial<T>): Promise<void> {
